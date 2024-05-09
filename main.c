@@ -3,7 +3,7 @@
 #include<stdlib.h>
 #include<math.h>
 #include "./include/hashduplo.h"
-#include "./include/abb.h"
+#include "./include/kdtree.h"
 #define TAM 10891
 
 typedef struct{
@@ -62,7 +62,7 @@ void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
     char codigo[7],nome[40];
     tmunicipio *p,*q, *reg;
     do{
-        printf("------------------------------\nDigite\n1 - Para buscar por codigo_ibge\n2 - Para buscar por nome\n3 - Para buscar os n vizinhos mais proximos\n4 - Para encerrar\n------------------------------\n");
+        printf("------------------------------\nDigite\n1 - Para buscar por codigo_ibge\n2 - Para buscar por nome\n3 - Para buscar os n vizinhos mais proximos por codigo\n4 - Para buscar os n vizinhos mais proximos por nome\n5 - Para encerrar\n------------------------------\n");
         scanf("%d",&aux);   
         switch (aux)
         {
@@ -80,21 +80,33 @@ void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
             printf("codigo_ibge: %s,\nnome: %s,\nlatitude: %f,\nlongitude: %f,\ncapital: %d,\ncodigo_uf: %d,\nsiafi_id: %d,\nddd: %d,\nfuso_horario: %s\n", q->codigo_ibge,q->nome,q->latitude,q->longitude,q->capital,q->codigo_uf,q->siafi_id,q->ddd,q->fuso_horario);
             break;
         case 3:
-            printf("Qual o código ibge da cidade você deseja procurar?\n");
+            printf("Qual o código ibge da cidade você deseja procurar os n vizinhos?\n");
             scanf("%s",codigo);
+            //fazer um vetor com os n codigos
             reg = (tmunicipio *)hash_busca(cod_hash,codigo);
             printf("Quantas cidades você quer buscar?\n");
             scanf("%d", &n);
-            theap *pheap = (theap *)malloc(sizeof(theap)*n);
-            abb_busca(kdtree,reg,pheap,0,n);
-            print_vizinhos(pheap,n);
+            theap *pheap_codigo = (theap *)malloc(sizeof(theap)*n);
+            kdtree_busca(kdtree,reg,pheap_codigo,0,n);
+            print_vizinhos(pheap_codigo,n);
             break;
+
+        case 4:
+            printf("Qual o nome da cidade você deseja procurar os n vizinhos?\n");
+            scanf("%s",nome);
+            reg = (tmunicipio *)hash_busca(nome_hash,nome);
+            printf("Quantas cidades você quer buscar?\n");
+            scanf("%d", &n);
+            theap *pheap_nome = (theap *)malloc(sizeof(theap)*n);
+            kdtree_busca(kdtree,reg,pheap_nome,0,n);
+            print_vizinhos(pheap_nome,n);
+            break;    
 
         default:
             printf("Opção inválida");
             break;
         }
-    }while(aux!=4);
+    }while(aux!=5);
 
 
 }
@@ -123,7 +135,7 @@ int main(){
     char linha[100], *token;
     hash_constroi(&cod_hash, TAM, get_key_cod);
     hash_constroi(&nome_hash, TAM, get_key_nome);
-    abb_constroi(&kdtree,cmplat,cmplong,calcula_dist);
+    kdtree_constroi(&kdtree,cmplat,cmplong,calcula_dist);
     fptr = fopen("municipios.json","r");
     token = strtok(linha,":\t\n\r");
     if(fptr == NULL){  //verifica se o arquivo não foi encontrado
@@ -178,7 +190,7 @@ int main(){
             aloca(&reg,codigo_ibge_temp,nome_temp,fuso_horario_temp,latitude_temp,longitude_temp,capital_temp,codigo_uf_temp,siafi_id_temp,ddd_temp);
             hash_insere(&cod_hash,reg);
             hash_insere(&nome_hash,reg);
-            abb_insere(&kdtree,reg);
+            kdtree_insere(&kdtree,reg);
         }   
 
     }

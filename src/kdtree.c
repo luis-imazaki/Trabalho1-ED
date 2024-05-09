@@ -3,7 +3,7 @@
 #include<assert.h>
 #include<math.h>
 #include<string.h>
-#include"../include/abb.h"
+#include"../include/kdtree.h"
 
 int pai(int n){
     return (n-1)/2;
@@ -40,7 +40,6 @@ void desce(theap V[],int n, int tam){
 }
 
 void sobe(theap v[], int n){
-    printf("%f -  %d - pai\n",v[n].dist,pai(n) );
     if(v[n].dist>v[pai(n)].dist){
         troca(&v[n],&v[pai(n)]);
         sobe(v,pai(n));
@@ -48,9 +47,7 @@ void sobe(theap v[], int n){
 }
 
 int insere_elemento(theap v[], int *tam, int max, void * reg, double dist) {
-    printf("inserindo heap\n");
-    
-    if (*tam == max) //nao sei se é >= ou ==
+    if (*tam == max)
         return EXIT_FAILURE;
 
     v[*tam].reg =  reg;
@@ -77,15 +74,14 @@ void heapsort(theap v[], int tam){
         desce(v,0,i);
     }
 }
-void abb_constroi(tarv *parv, double (*cmplat)(void *, void *),double (*cmplong)(void *, void *), double (*calcula_dist)(void *, void *)){
-    printf("construiu abb!\n");
+void kdtree_constroi(tarv *parv, double (*cmplat)(void *, void *),double (*cmplong)(void *, void *), double (*calcula_dist)(void *, void *)){
     parv->raiz = NULL;
     parv->cmplat  = cmplat;
     parv->cmplong = cmplong;
     parv->calcula_dist = calcula_dist;
 }
 
-int abb_insere_node(tarv * parv,tnode ** ppnode,void *reg, int nivel){
+int kdtree_insere_node(tarv * parv,tnode ** ppnode,void *reg, int nivel){
     if (*ppnode == NULL){
         *ppnode = malloc(sizeof(tnode));
         (*ppnode)->reg = reg;
@@ -96,30 +92,30 @@ int abb_insere_node(tarv * parv,tnode ** ppnode,void *reg, int nivel){
         if(nivel%2 == 0){
             if(parv->cmplat((*ppnode)->reg,reg)>0){
 
-                return abb_insere_node(parv,&((*ppnode)->esq),reg,
+                return kdtree_insere_node(parv,&((*ppnode)->esq),reg,
                 ++nivel);
             }else{
     
-                return abb_insere_node(parv,&((*ppnode)->dir),reg,++nivel);
+                return kdtree_insere_node(parv,&((*ppnode)->dir),reg,++nivel);
             }
         }else{
             if(parv->cmplong((*ppnode)->reg,reg)>0){
         
-                return abb_insere_node(parv,&((*ppnode)->esq),reg,++nivel);
+                return kdtree_insere_node(parv,&((*ppnode)->esq),reg,++nivel);
             }else{
             
-                return abb_insere_node(parv,&((*ppnode)->dir),reg,++nivel);
+                return kdtree_insere_node(parv,&((*ppnode)->dir),reg,++nivel);
             }
         }
     }
     return EXIT_FAILURE;
 }
 
-int   abb_insere(tarv * parv,  void * reg){
-    return abb_insere_node(parv,&parv->raiz,reg,0);
+int   kdtree_insere(tarv * parv,  void * reg){
+    return kdtree_insere_node(parv,&parv->raiz,reg,0);
 }
 
-void abb_busca_prox(tarv * parv,tnode * pnode,void *reg, theap * heap,int qtd_vizinhos, int n, int nivel, int * tam){
+void kdtree_vizinhos(tarv * parv,tnode * pnode,void *reg, theap * heap,int qtd_vizinhos, int n, int nivel, int * tam){
     if (pnode == NULL){
         return;
     }
@@ -151,17 +147,17 @@ void abb_busca_prox(tarv * parv,tnode * pnode,void *reg, theap * heap,int qtd_vi
             predecessor = pnode->esq;
         }
     }
-    abb_busca_prox(parv,sucessor,reg,heap,qtd_vizinhos,n,nivel+1,tam);
+    kdtree_vizinhos(parv,sucessor,reg,heap,qtd_vizinhos,n,nivel+1,tam);
     if(nivel%2==0){
         if(pow(parv->cmplat(pnode->reg,reg),2)<heap[0].dist)
-            abb_busca_prox(parv,predecessor,reg,heap,qtd_vizinhos,n,nivel+1,tam);
+            kdtree_vizinhos(parv,predecessor,reg,heap,qtd_vizinhos,n,nivel+1,tam);
     }else{
         if(pow(parv->cmplong(pnode->reg,reg),2)<heap[0].dist)
-            abb_busca_prox(parv,predecessor,reg,heap,qtd_vizinhos,n,nivel+1,tam);
+            kdtree_vizinhos(parv,predecessor,reg,heap,qtd_vizinhos,n,nivel+1,tam);
     }
 }
 
-void abb_busca(tarv * parv,  void * reg, theap * heap, int qtd_vizinhos, int n){
+void kdtree_busca(tarv * parv,  void * reg, theap * heap, int qtd_vizinhos, int n){
     int tam=0;
-    abb_busca_prox(parv,parv->raiz,reg,heap,qtd_vizinhos,n,0,&tam);
+    kdtree_vizinhos(parv,parv->raiz,reg,heap,qtd_vizinhos,n,0,&tam);
 }
