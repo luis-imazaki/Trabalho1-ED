@@ -131,7 +131,6 @@ int main(){
     }
     //"parser"
 
-    int qtd=0; 
     while(fgets(linha,100,fptr)){
         token = strtok(linha, ":\", ");
         if(strcmp(token,"codigo_ibge")==0){

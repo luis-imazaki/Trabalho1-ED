@@ -1,6 +1,7 @@
 #include<stdio.h>
 #include<stdlib.h>
 #include<assert.h>
+#include<math.h>
 #include<string.h>
 #include"../include/abb.h"
 
@@ -49,7 +50,7 @@ void sobe(theap v[], int n){
 int insere_elemento(theap v[], int *tam, int max, void * reg, double dist) {
     printf("inserindo heap\n");
     
-    if (*tam >= max) //nao sei se é >= ou ==
+    if (*tam == max) //nao sei se é >= ou ==
         return EXIT_FAILURE;
 
     v[*tam].reg =  reg;
@@ -59,7 +60,7 @@ int insere_elemento(theap v[], int *tam, int max, void * reg, double dist) {
     return EXIT_SUCCESS;
 }
 
-void altera_prioridade(theap v[], int tam, int n, int dist, void * reg) {
+void altera_prioridade(theap v[], int tam, int n, double dist, void * reg) {
 	theap anterior = v[n];
     v[n].reg = reg;
 	v[n].dist = dist;
@@ -67,7 +68,7 @@ void altera_prioridade(theap v[], int tam, int n, int dist, void * reg) {
 	if (dist > anterior.dist)
 		sobe(v, n);
 	if (dist < anterior.dist)
-		desce(v, tam, n);
+		desce(v, n, tam);
 }
 
 void heapsort(theap v[], int tam){
@@ -125,10 +126,10 @@ void abb_busca_prox(tarv * parv,tnode * pnode,void *reg, theap * heap,int qtd_vi
     double dist = parv->calcula_dist(pnode->reg,reg);
     ++qtd_vizinhos;
     if(dist>0){
-        int ret = insere_elemento(heap,tam,n,pnode->reg,dist);
-        (*tam)++; //nao sei se tenq somar
-        if(ret==EXIT_FAILURE&&dist<heap[0].dist){
-            altera_prioridade(heap,*tam,n,dist,reg);
+        if(*tam<n){
+            insere_elemento(heap,tam,n,pnode->reg,dist);
+        }else if(dist<heap[0].dist){
+            altera_prioridade(heap,*tam,0,dist,pnode->reg);
         }
     }
     tnode * predecessor = NULL;
@@ -141,8 +142,7 @@ void abb_busca_prox(tarv * parv,tnode * pnode,void *reg, theap * heap,int qtd_vi
             sucessor = pnode->dir;
             predecessor = pnode->esq;
         }
-    }
-    if(nivel%2 == 1){
+    }else{
         if(parv->cmplong(pnode->reg,reg)>0){
             sucessor = pnode->esq;
             predecessor = pnode->dir;
@@ -152,7 +152,13 @@ void abb_busca_prox(tarv * parv,tnode * pnode,void *reg, theap * heap,int qtd_vi
         }
     }
     abb_busca_prox(parv,sucessor,reg,heap,qtd_vizinhos,n,nivel+1,tam);
-    abb_busca_prox(parv,predecessor,reg,heap,qtd_vizinhos,n,nivel+1,tam);
+    if(nivel%2==0){
+        if(pow(parv->cmplat(pnode->reg,reg),2)<heap[0].dist)
+            abb_busca_prox(parv,predecessor,reg,heap,qtd_vizinhos,n,nivel+1,tam);
+    }else{
+        if(pow(parv->cmplong(pnode->reg,reg),2)<heap[0].dist)
+            abb_busca_prox(parv,predecessor,reg,heap,qtd_vizinhos,n,nivel+1,tam);
+    }
 }
 
 void abb_busca(tarv * parv,  void * reg, theap * heap, int qtd_vizinhos, int n){
