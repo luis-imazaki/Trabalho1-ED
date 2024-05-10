@@ -32,14 +32,14 @@ void print_vizinhos(theap *pheap,int n){
     for(int i=0;i<n;i++){
         printf("------------------------------------------------------------\n");
         printf("%d - codigo_ibge: %s\n",cont,((tmunicipio *)pheap[i].reg)->codigo_ibge);
-        printf("       nome: %s\n",((tmunicipio *)(pheap)[i].reg)->nome);
-        printf("       latitude: %f\n",((tmunicipio *)(pheap)[i].reg)->latitude);
-        printf("       longitude: %f\n",((tmunicipio *)(pheap)[i].reg)->longitude);
-        printf("       capital: %d\n",((tmunicipio *)(pheap)[i].reg)->capital);
-        printf("       codigo_uf: %d\n",((tmunicipio *)(pheap)[i].reg)->codigo_uf);
-        printf("       siafi_id: %d\n",((tmunicipio *)(pheap)[i].reg)->siafi_id);
-        printf("       ddd: %d\n",((tmunicipio *)(pheap)[i].reg)->ddd);
-        printf("       fuso_horario: %s\n",((tmunicipio *)(pheap)[i].reg)->fuso_horario);
+        printf("     nome: %s\n",((tmunicipio *)(pheap)[i].reg)->nome);
+        printf("     latitude: %f\n",((tmunicipio *)(pheap)[i].reg)->latitude);
+        printf("     longitude: %f\n",((tmunicipio *)(pheap)[i].reg)->longitude);
+        printf("     capital: %d\n",((tmunicipio *)(pheap)[i].reg)->capital);
+        printf("     codigo_uf: %d\n",((tmunicipio *)(pheap)[i].reg)->codigo_uf);
+        printf("     siafi_id: %d\n",((tmunicipio *)(pheap)[i].reg)->siafi_id);
+        printf("     ddd: %d\n",((tmunicipio *)(pheap)[i].reg)->ddd);
+        printf("     fuso_horario: %s\n",((tmunicipio *)(pheap)[i].reg)->fuso_horario);
         printf("------------------------------------------------------------\n");
         ++cont;
     }
@@ -55,6 +55,9 @@ void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
         scanf("%d",&aux);   
         switch (aux)
         {
+        case 0:
+            printf("Encerrando...\n");
+            break;    
         case 1:
             printf("Digite o código IBGE da cidade\n");
             scanf("%s", codigo);
