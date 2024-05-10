@@ -47,58 +47,75 @@ void print_vizinhos(theap *pheap,int n){
 void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
     int aux, n, cidades[10], qtd_cidades=0, i;
     char codigo[7],nome[40];
-    tmunicipio *p,*q, *reg;
+    tmunicipio *p, *reg;
+    // tmunicipio *q;
     do{
-        printf("------------------------------\nDigite\n1 - Para buscar por codigo_ibge\n2 - Para buscar por nome\n3 - Para buscar os n vizinhos mais proximos por codigo\n4 - Para buscar os n vizinhos mais proximos por nome\n5 - Para encerrar\n------------------------------\n");
+        printf("------------------------------------------------------------\nDigite\n1 - Para buscar por codigo_ibge\n2 - Para buscar os n vizinhos mais proximos por codigo\n3 - Para buscar os n vizinhos mais proximos por nome\n0 - Para encerrar\n------------------------------------------------------------\n");
         scanf("%d",&aux);   
         switch (aux)
         {
         case 1:
-            printf("Digite o código da cidade\n");
+            printf("Digite o código IBGE da cidade\n");
             scanf("%s", codigo);
             p = (tmunicipio *)hash_busca(cod_hash,codigo);
             printf("codigo_ibge: %s,\nnome: %s,\nlatitude: %f,\nlongitude: %f,\ncapital: %d,\ncodigo_uf: %d,\nsiafi_id: %d,\nddd: %d,\nfuso_horario: %s\n", p->codigo_ibge,p->nome,p->latitude,p->longitude,p->capital,p->codigo_uf,p->siafi_id,p->ddd,p->fuso_horario);
             break;
 
-        case 2:
+        /*case 2:
             printf("Digite o nome da cidade\n");
             scanf(" %[^\n]", nome);
             q = (tmunicipio *)hash_busca(nome_hash,nome);
             printf("codigo_ibge: %s,\nnome: %s,\nlatitude: %f,\nlongitude: %f,\ncapital: %d,\ncodigo_uf: %d,\nsiafi_id: %d,\nddd: %d,\nfuso_horario: %s\n", q->codigo_ibge,q->nome,q->latitude,q->longitude,q->capital,q->codigo_uf,q->siafi_id,q->ddd,q->fuso_horario);
-            break;
-        case 3:
-            printf("Qual o código ibge da cidade você deseja procurar os n vizinhos?\n");
+            break;*/
+        case 2:
+            printf("Qual o código IBGE da cidade você deseja procurar os n vizinhos?\n");
             scanf("%s",codigo);
             //fazer um vetor com os n codigos
             reg = (tmunicipio *)hash_busca(cod_hash,codigo);
             printf("Quantas cidades você quer buscar?\n");
             scanf("%d", &n);
+            if(n>5569 || n<1){
+                printf("O número de vizinhos varia de 1 a 5569\n");
+                break;
+            }
             theap *pheap_codigo = (theap *)malloc(sizeof(theap)*n);
             kdtree_busca(kdtree,reg,pheap_codigo,0,n);
             print_vizinhos(pheap_codigo,n);
+            free(pheap_codigo);
             break;
 
-        case 4:
+        case 3:
             printf("Qual o nome da cidade você deseja procurar os n vizinhos?\n");
+            qtd_cidades = 0;
             scanf(" %[^\n]",nome);
             hash_busca_cidades(nome_hash,nome,cidades,&qtd_cidades);
-            for(i=0; i<qtd_cidades;i++){
-                printf("|%d - %s| ", i+1,((tmunicipio *)(nome_hash.table[cidades[i]]))->codigo_ibge);
+            printf("Escreva o código IBGE da cidade que você quer procurar os vizinhos\n");
+            if(qtd_cidades>1){
+                for(i=0; i<qtd_cidades;i++){
+                printf("{|%s|%s|%d|%s|}\n",((tmunicipio *)(nome_hash.table[cidades[i]]))->codigo_ibge,((tmunicipio *)(nome_hash.table[cidades[i]]))->nome,((tmunicipio *)(nome_hash.table[cidades[i]]))->ddd,((tmunicipio *)(nome_hash.table[cidades[i]]))->fuso_horario);
+                }
+                scanf("%s", codigo);
+                reg = (tmunicipio *)hash_busca(cod_hash,codigo);
+                
+            }else{
+                reg = (tmunicipio *)hash_busca(nome_hash,nome);
             }
-            scanf("%s", codigo);
-            reg = (tmunicipio *)hash_busca(cod_hash,codigo);
             printf("Quantas cidades você quer buscar?\n");
             scanf("%d", &n);
+            if(n>5569 || n<1){
+                printf("O número de vizinhos varia de 1 a 5569\n");
+                break;
+            }
             theap *pheap_nome = (theap *)malloc(sizeof(theap)*n);
             kdtree_busca(kdtree,reg,pheap_nome,0,n);
             print_vizinhos(pheap_nome,n);
+            free(pheap_nome);
             break;    
-
         default:
             printf("Opção inválida");
             break;
         }
-    }while(aux!=5);
+    }while(aux!=0);
 
 
 }
@@ -189,6 +206,7 @@ int main(){
     interface(cod_hash,nome_hash, &kdtree);
     hash_apaga(&cod_hash);
     hash_apaga(&nome_hash);
+    kdtree_free(kdtree.raiz);
     fclose(fptr);
     return 0;
 }

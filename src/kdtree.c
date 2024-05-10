@@ -74,6 +74,7 @@ void heapsort(theap v[], int tam){
         desce(v,0,i);
     }
 }
+
 void kdtree_constroi(tarv *parv, double (*cmplat)(void *, void *),double (*cmplong)(void *, void *), double (*calcula_dist)(void *, void *)){
     parv->raiz = NULL;
     parv->cmplat  = cmplat;
@@ -160,4 +161,12 @@ void kdtree_vizinhos(tarv * parv,tnode * pnode,void *reg, theap * heap,int qtd_v
 void kdtree_busca(tarv * parv,  void * reg, theap * heap, int qtd_vizinhos, int n){
     int tam=0;
     kdtree_vizinhos(parv,parv->raiz,reg,heap,qtd_vizinhos,n,0,&tam);
+}
+
+void kdtree_free(tnode * kdtree){
+    if(kdtree!=NULL){
+        kdtree_free(kdtree->esq);
+        kdtree_free(kdtree->dir);
+        free(kdtree);   
+    }
 }

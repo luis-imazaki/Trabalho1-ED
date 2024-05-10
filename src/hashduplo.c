@@ -86,9 +86,7 @@ void hash_busca_cidades(thash h, const char *key, int * cidades, int *num_cidade
     int pos = hashduplo(key, SEED, i)%TAM;
     while(h.table[pos]!=0){
         if (strcmp(h.get_key((void*)h.table[pos]),key) == 0){
-            printf("entrou na busca\n");
-            cidades[*num_cidades] = pos; //isso ta dando errado pq?
-            printf("dps da busca\n");
+            cidades[*num_cidades] = pos;
             pos = hashduplo(key, SEED, ++i)%TAM;
             *num_cidades+=1;
         }else{

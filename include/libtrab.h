@@ -52,4 +52,5 @@ void kdtree_constroi(tarv *parv, double (*cmplat)(void *, void *), double(*cmplo
 int kdtree_insere(tarv * parv,  void * reg);
 void kdtree_vizinhos(tarv * parv,tnode *pnode,  void * reg, theap * heap,int  qtd_vizinhos, int n, int nivel, int * tam);
 void kdtree_busca(tarv * parv,  void * reg, theap * heap,int qtd_vizinhos, int n);
+void kdtree_free(tnode * kdtree);
 #endif
