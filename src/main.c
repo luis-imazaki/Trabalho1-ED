@@ -2,7 +2,7 @@
 #include<string.h>
 #include<stdlib.h>
 #include<math.h>
-#include "./include/libtrab.h"
+#include "../include/libtrab.h"
 #define TAM 10891
 
 double cmplong(void *t1, void *t2){
