@@ -120,4 +120,5 @@ void hash_apaga(thash *h){
 
     }
     free(h->table);
+    free(h);
 }

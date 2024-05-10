@@ -1,1 +1,3 @@
 .vscode
+./include/kdtree.h
+./include/hashduplo.h

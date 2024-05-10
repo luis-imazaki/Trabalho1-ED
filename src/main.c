@@ -31,15 +31,15 @@ void print_vizinhos(theap *pheap,int n){
     printf("Vizinho(s) mais próximo(s):\n");
     for(int i=0;i<n;i++){
         printf("%d - codigo_ibge: %s\n",cont,((tmunicipio *)pheap[i].reg)->codigo_ibge);
-        printf("    nome: %s\n",((tmunicipio *)(pheap)[i].reg)->nome);
-        printf("    latitude: %f\n",((tmunicipio *)(pheap)[i].reg)->latitude);
-        printf("    longitude: %f\n",((tmunicipio *)(pheap)[i].reg)->longitude);
-        printf("    capital: %d\n",((tmunicipio *)(pheap)[i].reg)->capital);
-        printf("    codigo_uf: %d\n",((tmunicipio *)(pheap)[i].reg)->codigo_uf);
-        printf("    siafi_id: %d\n",((tmunicipio *)(pheap)[i].reg)->siafi_id);
-        printf("    ddd: %d\n",((tmunicipio *)(pheap)[i].reg)->ddd);
-        printf("    fuso_horario: %s\n",((tmunicipio *)(pheap)[i].reg)->fuso_horario);
-        printf("---------------------------------------\n");
+        printf("      nome: %s\n",((tmunicipio *)(pheap)[i].reg)->nome);
+        printf("      latitude: %f\n",((tmunicipio *)(pheap)[i].reg)->latitude);
+        printf("      longitude: %f\n",((tmunicipio *)(pheap)[i].reg)->longitude);
+        printf("      capital: %d\n",((tmunicipio *)(pheap)[i].reg)->capital);
+        printf("      codigo_uf: %d\n",((tmunicipio *)(pheap)[i].reg)->codigo_uf);
+        printf("      siafi_id: %d\n",((tmunicipio *)(pheap)[i].reg)->siafi_id);
+        printf("      ddd: %d\n",((tmunicipio *)(pheap)[i].reg)->ddd);
+        printf("      fuso_horario: %s\n",((tmunicipio *)(pheap)[i].reg)->fuso_horario);
+        printf("------------------------------------------------------------\n");
         ++cont;
     }
 }
@@ -50,7 +50,7 @@ void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
     tmunicipio *p, *reg;
     // tmunicipio *q;
     do{
-        printf("------------------------------------------------------------\nDigite\n1 - Para buscar por codigo_ibge\n2 - Para buscar os n vizinhos mais proximos por codigo\n3 - Para buscar os n vizinhos mais proximos por nome\n0 - Para encerrar\n------------------------------------------------------------\n");
+        printf("------------------------------------------------------------\nDigite:\n1 - Para buscar por codigo_ibge\n2 - Para buscar os n vizinhos mais proximos por codigo\n3 - Para buscar os n vizinhos mais proximos por nome\n0 - Para encerrar\n------------------------------------------------------------\n");
         scanf("%d",&aux);   
         switch (aux)
         {
@@ -89,8 +89,8 @@ void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
             qtd_cidades = 0;
             scanf(" %[^\n]",nome);
             hash_busca_cidades(nome_hash,nome,cidades,&qtd_cidades);
-            printf("Escreva o código IBGE da cidade que você quer procurar os vizinhos\n");
             if(qtd_cidades>1){
+                printf("Escreva o código IBGE da cidade que você quer procurar os vizinhos\n");
                 for(i=0; i<qtd_cidades;i++){
                 printf("{|%s|%s|%d|%s|}\n",((tmunicipio *)(nome_hash.table[cidades[i]]))->codigo_ibge,((tmunicipio *)(nome_hash.table[cidades[i]]))->nome,((tmunicipio *)(nome_hash.table[cidades[i]]))->ddd,((tmunicipio *)(nome_hash.table[cidades[i]]))->fuso_horario);
                 }
@@ -112,7 +112,7 @@ void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
             free(pheap_nome);
             break;    
         default:
-            printf("Opção inválida");
+            printf("Opção inválida\n");
             break;
         }
     }while(aux!=0);
@@ -145,10 +145,10 @@ int main(){
     hash_constroi(&cod_hash, TAM, get_key_cod);
     hash_constroi(&nome_hash, TAM, get_key_nome);
     kdtree_constroi(&kdtree,cmplat,cmplong,calcula_dist);
-    fptr = fopen("municipios.json","r");
+    fptr = fopen("../include/municipios.json","r");
     token = strtok(linha,":\t\n\r");
     if(fptr == NULL){  //verifica se o arquivo não foi encontrado
-        printf("arquivo não encontrado");
+        printf("Arquivo não encontrado.");
     }
     //"parser"
 
@@ -205,7 +205,7 @@ int main(){
     }
     interface(cod_hash,nome_hash, &kdtree);
     hash_apaga(&cod_hash);
-    hash_apaga(&nome_hash);
+    free(nome_hash.table);
     kdtree_free(kdtree.raiz);
     fclose(fptr);
     return 0;
