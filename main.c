@@ -2,21 +2,8 @@
 #include<string.h>
 #include<stdlib.h>
 #include<math.h>
-#include "./include/hashduplo.h"
-#include "./include/kdtree.h"
+#include "./include/libtrab.h"
 #define TAM 10891
-
-typedef struct{
-    char codigo_ibge[15];
-    char nome[40];
-    double latitude;
-    double longitude;
-    int capital;
-    int codigo_uf;
-    int siafi_id;
-    int ddd;
-    char fuso_horario[60];
-}tmunicipio;
 
 double cmplong(void *t1, void *t2){
     return ((tmunicipio *) t1)->longitude - ((tmunicipio *) t2)->longitude;
@@ -58,7 +45,7 @@ void print_vizinhos(theap *pheap,int n){
 }
 
 void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
-    int aux, n;
+    int aux, n, cidades[10], qtd_cidades=0, i;
     char codigo[7],nome[40];
     tmunicipio *p,*q, *reg;
     do{
@@ -93,8 +80,13 @@ void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
 
         case 4:
             printf("Qual o nome da cidade você deseja procurar os n vizinhos?\n");
-            scanf("%s",nome);
-            reg = (tmunicipio *)hash_busca(nome_hash,nome);
+            scanf(" %[^\n]",nome);
+            hash_busca_cidades(nome_hash,nome,cidades,&qtd_cidades);
+            for(i=0; i<qtd_cidades;i++){
+                printf("|%d - %s| ", i+1,((tmunicipio *)(nome_hash.table[cidades[i]]))->codigo_ibge);
+            }
+            scanf("%s", codigo);
+            reg = (tmunicipio *)hash_busca(cod_hash,codigo);
             printf("Quantas cidades você quer buscar?\n");
             scanf("%d", &n);
             theap *pheap_nome = (theap *)malloc(sizeof(theap)*n);

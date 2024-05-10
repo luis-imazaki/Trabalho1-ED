@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
-#include "../include/hashduplo.h"
+#include "../include/libtrab.h"
 #define SEED 0x12345678
 #define TAM 10891
 
@@ -66,7 +66,7 @@ int hash_constroi(thash * h,int nbuckets, char * (*get_key)(void *) ){
 }
 
 
-void * hash_busca(thash  h, const char * key){
+void * hash_busca(thash  h, const char * key){//tirar num_cidades e cidades
     int i = 0;
     int pos = hashduplo(key, SEED, i)%TAM;
     void * ret = NULL;
@@ -78,6 +78,23 @@ void * hash_busca(thash  h, const char * key){
         }
     }
     return ret;
+
+}
+
+void hash_busca_cidades(thash h, const char *key, int * cidades, int *num_cidades){
+    int i = 0;
+    int pos = hashduplo(key, SEED, i)%TAM;
+    while(h.table[pos]!=0){
+        if (strcmp(h.get_key((void*)h.table[pos]),key) == 0){
+            printf("entrou na busca\n");
+            cidades[*num_cidades] = pos; //isso ta dando errado pq?
+            printf("dps da busca\n");
+            pos = hashduplo(key, SEED, ++i)%TAM;
+            *num_cidades+=1;
+        }else{
+            pos = hashduplo(key, SEED, ++i)%TAM;
+        }
+    }
 
 }
 

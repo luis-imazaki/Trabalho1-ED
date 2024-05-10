@@ -1,6 +1,7 @@
 #ifndef __HASHDUPLO__
 #define __HASHDUPLO__
 #include <stdint.h>
+#include <stdlib.h>
 
 typedef struct {
 	uintptr_t * table;
@@ -10,7 +11,6 @@ typedef struct {
 	char* (*get_key)(void *);
 } thash;
 
-uint32_t hashf(const char* str, uint32_t h);
 int hash_insere(thash * h, void * bucket);
 int hash_constroi(thash * h,int nbuckets, char * (*get_key)(void *) );
 void * hash_busca(thash h, const char * key);
