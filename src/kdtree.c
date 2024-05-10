@@ -3,7 +3,7 @@
 #include<assert.h>
 #include<math.h>
 #include<string.h>
-#include"../include/kdtree.h"
+#include"../include/libtrab.h"
 
 int pai(int n){
     return (n-1)/2;

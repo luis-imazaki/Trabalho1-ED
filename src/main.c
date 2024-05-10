@@ -30,15 +30,16 @@ void print_vizinhos(theap *pheap,int n){
     heapsort(pheap,n);
     printf("Vizinho(s) mais próximo(s):\n");
     for(int i=0;i<n;i++){
+        printf("------------------------------------------------------------\n");
         printf("%d - codigo_ibge: %s\n",cont,((tmunicipio *)pheap[i].reg)->codigo_ibge);
-        printf("      nome: %s\n",((tmunicipio *)(pheap)[i].reg)->nome);
-        printf("      latitude: %f\n",((tmunicipio *)(pheap)[i].reg)->latitude);
-        printf("      longitude: %f\n",((tmunicipio *)(pheap)[i].reg)->longitude);
-        printf("      capital: %d\n",((tmunicipio *)(pheap)[i].reg)->capital);
-        printf("      codigo_uf: %d\n",((tmunicipio *)(pheap)[i].reg)->codigo_uf);
-        printf("      siafi_id: %d\n",((tmunicipio *)(pheap)[i].reg)->siafi_id);
-        printf("      ddd: %d\n",((tmunicipio *)(pheap)[i].reg)->ddd);
-        printf("      fuso_horario: %s\n",((tmunicipio *)(pheap)[i].reg)->fuso_horario);
+        printf("       nome: %s\n",((tmunicipio *)(pheap)[i].reg)->nome);
+        printf("       latitude: %f\n",((tmunicipio *)(pheap)[i].reg)->latitude);
+        printf("       longitude: %f\n",((tmunicipio *)(pheap)[i].reg)->longitude);
+        printf("       capital: %d\n",((tmunicipio *)(pheap)[i].reg)->capital);
+        printf("       codigo_uf: %d\n",((tmunicipio *)(pheap)[i].reg)->codigo_uf);
+        printf("       siafi_id: %d\n",((tmunicipio *)(pheap)[i].reg)->siafi_id);
+        printf("       ddd: %d\n",((tmunicipio *)(pheap)[i].reg)->ddd);
+        printf("       fuso_horario: %s\n",((tmunicipio *)(pheap)[i].reg)->fuso_horario);
         printf("------------------------------------------------------------\n");
         ++cont;
     }
@@ -58,6 +59,7 @@ void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
             printf("Digite o código IBGE da cidade\n");
             scanf("%s", codigo);
             p = (tmunicipio *)hash_busca(cod_hash,codigo);
+            printf("------------------------------------------------------------\n");
             printf("codigo_ibge: %s,\nnome: %s,\nlatitude: %f,\nlongitude: %f,\ncapital: %d,\ncodigo_uf: %d,\nsiafi_id: %d,\nddd: %d,\nfuso_horario: %s\n", p->codigo_ibge,p->nome,p->latitude,p->longitude,p->capital,p->codigo_uf,p->siafi_id,p->ddd,p->fuso_horario);
             break;
 
@@ -145,7 +147,7 @@ int main(){
     hash_constroi(&cod_hash, TAM, get_key_cod);
     hash_constroi(&nome_hash, TAM, get_key_nome);
     kdtree_constroi(&kdtree,cmplat,cmplong,calcula_dist);
-    fptr = fopen("../include/municipios.json","r");
+    fptr = fopen("../municipios.json","r");
     token = strtok(linha,":\t\n\r");
     if(fptr == NULL){  //verifica se o arquivo não foi encontrado
         printf("Arquivo não encontrado.");
