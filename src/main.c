@@ -49,7 +49,6 @@ void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
     int aux, n, cidades[10], qtd_cidades=0, i;
     char codigo[7],nome[40];
     tmunicipio *p, *reg;
-    // tmunicipio *q;
     do{
         printf("------------------------------------------------------------\nDigite:\n1 - Para buscar por codigo_ibge\n2 - Para buscar os n vizinhos mais proximos por codigo\n3 - Para buscar os n vizinhos mais proximos por nome\n0 - Para encerrar\n------------------------------------------------------------\n");
         scanf("%d",&aux);   
@@ -65,17 +64,9 @@ void interface(thash cod_hash,thash nome_hash, tarv * kdtree){
             printf("------------------------------------------------------------\n");
             printf("codigo_ibge: %s,\nnome: %s,\nlatitude: %f,\nlongitude: %f,\ncapital: %d,\ncodigo_uf: %d,\nsiafi_id: %d,\nddd: %d,\nfuso_horario: %s\n", p->codigo_ibge,p->nome,p->latitude,p->longitude,p->capital,p->codigo_uf,p->siafi_id,p->ddd,p->fuso_horario);
             break;
-
-        /*case 2:
-            printf("Digite o nome da cidade\n");
-            scanf(" %[^\n]", nome);
-            q = (tmunicipio *)hash_busca(nome_hash,nome);
-            printf("codigo_ibge: %s,\nnome: %s,\nlatitude: %f,\nlongitude: %f,\ncapital: %d,\ncodigo_uf: %d,\nsiafi_id: %d,\nddd: %d,\nfuso_horario: %s\n", q->codigo_ibge,q->nome,q->latitude,q->longitude,q->capital,q->codigo_uf,q->siafi_id,q->ddd,q->fuso_horario);
-            break;*/
         case 2:
             printf("Qual o código IBGE da cidade você deseja procurar os n vizinhos?\n");
             scanf("%s",codigo);
-            //fazer um vetor com os n codigos
             reg = (tmunicipio *)hash_busca(cod_hash,codigo);
             printf("Quantas cidades você quer buscar?\n");
             scanf("%d", &n);

@@ -5,7 +5,7 @@
 #include <assert.h>
 #include "../include/libtrab.h"
 #define SEED 0x12345678
-#define TAM 10891
+#define TAM 10891 //primo
 
 int hash1(const char* str, uint32_t h){
     for (; *str; ++str) {

@@ -167,6 +167,6 @@ void kdtree_free(tnode * kdtree){
     if(kdtree!=NULL){
         kdtree_free(kdtree->esq);
         kdtree_free(kdtree->dir);
-        free(kdtree);   
+        free(kdtree);
     }
 }
